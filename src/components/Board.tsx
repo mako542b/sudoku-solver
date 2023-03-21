@@ -1,19 +1,31 @@
+import { useState, useRef, useEffect } from "react";
 import Cell from "./Cell"
+import moveFocus from "../utility/moveFocus";
+import defCells from "../utility/makeCells";
+import { cellInterface } from "../utility/makeCells";
 
 export default function() {
 
-    const cells = []
-    for(let i = 1; i <= 9; i++){
-        for(let j = 1; j <= 9; j++){
-            let newCell = i + '_' + j
-            cells.push(newCell)
+    const [currentFocus, setCurrentFocus] = useState<string>('1_1')
+    const [cells, setCells] = useState<cellInterface>(defCells)
+
+    useEffect(() => {
+        function handleBoardNav(e: KeyboardEvent) {
+            setCurrentFocus(prev => moveFocus(prev, e.key))
         }
+        document.addEventListener('keydown', handleBoardNav)
+        return () => document.removeEventListener('keydown', handleBoardNav)
+    }, [])
+
+    function handleInput() {
+        setCurrentFocus(prev => moveFocus(prev, 'next'))
     }
+
 
     return(
         <div className="grid grid-areas-mainBoard">
-            {cells?.length > 0 && cells.map(cell => (
-                <Cell area={cell} key={cell} />
+            {Object.entries(cells).map( cell => (
+                <Cell area={cell} key={cell[0]} currentFocus={currentFocus} handleInput={handleInput} setCurrentFocus={setCurrentFocus}/>
             ))}
         </div>
     )
