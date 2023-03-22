@@ -22,13 +22,18 @@ export default function() {
         setCurrentFocus(prev => moveFocus(prev, 'next'))
     }
 
+    function handleClick() {
+
+            setCells(prev => backtracking(prev) )
+    }
+
 
     return(
         <div className="grid grid-areas-mainBoard">
             {Object.entries(cells).map( cell => (
                 <Cell area={cell} key={cell[0]} currentFocus={currentFocus} handleInput={handleInput} setCurrentFocus={setCurrentFocus} setCells={setCells}/>
             ))}
-            <button onClick={() => backtracking(cells)} className="px-8 py-2 rounded-full bg-green-400 absolute -top-1">Check</button>
+            <button onClick={handleClick} className="px-8 py-2 rounded-full bg-green-400 absolute -top-1">Check</button>
         </div>
     )
 }
