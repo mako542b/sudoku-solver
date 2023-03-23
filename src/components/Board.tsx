@@ -10,6 +10,10 @@ export default function() {
 
     const [currentFocus, setCurrentFocus] = useState<string>('1_1')
     const [cells, setCells] = useState<cellInterface>(defCells)
+    const [calculatingCell, setCalculatingCell] = useState<string>('')
+    const [collidingCells, setcollidingCells] = useState<string[]>([])
+    const [validated, setValidated] = useState<boolean>(false)
+    const originalBoard = useRef<cellInterface>(defCells)
 
     useEffect(() => {
         function handleBoardNav(e: KeyboardEvent) {
@@ -19,16 +23,11 @@ export default function() {
         return () => document.removeEventListener('keydown', handleBoardNav)
     }, [])
 
-    function handleInput() {
-        setCurrentFocus(prev => moveFocus(prev, 'next'))
-    }
 
-    function handleClick() {
-            setCells(prev => backtracking(prev) )
-    }
 
     async function handleSolveBySteps() {
-        let isSolved = await startSolveBySteps(cells, setCells)
+        originalBoard.current = {...cells}
+        let isSolved = await startSolveBySteps(cells, setCells, setCalculatingCell, setcollidingCells, setValidated)
         if(isSolved) console.log('solved')
         else console.log('not solved')
     }
@@ -37,9 +36,9 @@ export default function() {
     return(
         <div className="grid grid-areas-mainBoard">
             {Object.entries(cells).map( cell => (
-                <Cell area={cell} key={cell[0]} currentFocus={currentFocus} handleInput={handleInput} setCurrentFocus={setCurrentFocus} setCells={setCells}/>
+                <Cell isOriginal={originalBoard.current[cell[0]] !== ''} validated={validated} isCollading={collidingCells.includes(cell[0])} isCalculating={calculatingCell === cell[0]} area={cell} key={cell[0]} currentFocus={currentFocus} setcollidingCells={setcollidingCells} setCurrentFocus={setCurrentFocus} setCells={setCells} cells={cells}/>
             ))}
-            <button onClick={handleClick} className="px-8 py-2 rounded-full bg-green-400 absolute top-1 left-0">Solve</button>
+            <button onClick={() => setCells(prev => backtracking(prev) )} className="px-8 py-2 rounded-full bg-green-400 absolute top-1 left-0">Solve</button>
             <button onClick={handleSolveBySteps} className="px-8 py-2 rounded-full bg-green-400 absolute top-1 right-0">Step by step</button>
         </div>
     )
