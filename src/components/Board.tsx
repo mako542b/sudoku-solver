@@ -4,6 +4,7 @@ import moveFocus from "../utility/moveFocus";
 import defCells from "../utility/makeCells";
 import { cellInterface } from "../utility/makeCells";
 import backtracking from "../utility/backtracking";
+import startSolveBySteps from "../utility/solveBySteps";
 
 export default function() {
 
@@ -23,8 +24,13 @@ export default function() {
     }
 
     function handleClick() {
-
             setCells(prev => backtracking(prev) )
+    }
+
+    async function handleSolveBySteps() {
+        let isSolved = await startSolveBySteps(cells, setCells)
+        if(isSolved) console.log('solved')
+        else console.log('not solved')
     }
 
 
@@ -33,7 +39,8 @@ export default function() {
             {Object.entries(cells).map( cell => (
                 <Cell area={cell} key={cell[0]} currentFocus={currentFocus} handleInput={handleInput} setCurrentFocus={setCurrentFocus} setCells={setCells}/>
             ))}
-            <button onClick={handleClick} className="px-8 py-2 rounded-full bg-green-400 absolute -top-1">Check</button>
+            <button onClick={handleClick} className="px-8 py-2 rounded-full bg-green-400 absolute top-1 left-0">Solve</button>
+            <button onClick={handleSolveBySteps} className="px-8 py-2 rounded-full bg-green-400 absolute top-1 right-0">Step by step</button>
         </div>
     )
 }
