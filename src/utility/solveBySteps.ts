@@ -5,13 +5,18 @@ type stateSetter<n> = React.Dispatch<React.SetStateAction<n>>
 
 export default async function startSolveBySteps(
     board: cellInterface, 
+    originalBoard: cellInterface,
     boardSetter: stateSetter<cellInterface>, 
     calculatingCellSetter: stateSetter<string>,
     setcollidingCells: stateSetter<string[]>,
     setValidated: stateSetter<boolean>,
+    aborted: React.MutableRefObject<boolean>,
+    delayDuration: React.MutableRefObject<number>,
+    calculatingCell: string,
 ){
     try {
-        return await solveBySteps(1, 1, {...board}, board)
+        let [row, col] = calculatingCell.split('_').map(a => +a)
+        return await solveBySteps(row, col, {...board}, originalBoard)
     } catch {
         return false
     }
@@ -20,7 +25,7 @@ export default async function startSolveBySteps(
     // 
 
     function delay(ms: number) {
-        return new Promise(resolve => setTimeout(() => resolve(null), 5))
+        return new Promise(resolve => setTimeout(() => resolve(null), delayDuration?.current || 100))
     }
 
     async function solveBySteps(
@@ -29,12 +34,14 @@ export default async function startSolveBySteps(
         board: cellInterface, 
         orgBoard:cellInterface, 
     ): Promise<boolean> {
+
         
         if(row === 10) return true
         if(row === 0) return false
-
+        
         let cellAdress = row + '_' + col
         calculatingCellSetter(cellAdress)
+        if(aborted.current) return false
 
         if(orgBoard[cellAdress] !== '') {
             row = col < 9 ? row : row + 1
@@ -43,6 +50,8 @@ export default async function startSolveBySteps(
         }
 
         let success = await setCellValue(cellAdress, board[cellAdress] ,board)
+
+        if(success === 'break') return false
 
         if(success) {
             boardSetter({...board})
@@ -67,6 +76,7 @@ export default async function startSolveBySteps(
 
     async function setCellValue(cellAdress: string, cellValue: string, board:cellInterface) {
         for(let i = +cellValue + 1 || 1; i <= 9; i++){
+            if(aborted.current) return 'break'
             boardSetter(prev => ({...prev, [cellAdress]: String(i)}))
             setcollidingCells([])
             await delay(500)

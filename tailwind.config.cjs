@@ -6,13 +6,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      // gridTemplateAreas: {
-      //   'mainBoard': [
-      //     '1_1 1_2 1_3',
-      //     '2_1 2_2 2_3',
-      //     '3_1 3_2 3_3',
-      //   ],
-      // },
       gridTemplateAreas: {
         'mainBoard': [
           '1_1 1_2 1_3 1_4 1_5 1_6 1_7 1_8 1_9',
@@ -25,7 +18,10 @@ module.exports = {
           '8_1 8_2 8_3 8_4 8_5 8_6 8_7 8_8 8_9',
           '9_1 9_2 9_3 9_4 9_5 9_6 9_7 9_8 9_9',
         ],
-      },      
+      },
+      gridTemplateColumns: {
+        'mainGrid': '1fr 150px'
+      }   
     },
   },
   plugins: [

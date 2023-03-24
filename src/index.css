@@ -4,11 +4,15 @@
 
 .cell {
   @apply aspect-square bg-white border-gray-900;
-  width: clamp(15px, 8vw, 50px);
+  width: clamp(15px, 6vw, 50px);
 }
 
 input {
   width:100%;
   height:100%;
   font-size: clamp(10px, 5vw, 40px);
+}
+
+.button {
+  @apply rounded-md py-3 bg-green-100 hover:bg-green-200 font-semibold uppercase;
 }
