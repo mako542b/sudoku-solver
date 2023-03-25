@@ -8,25 +8,38 @@ export default function(orgBoard: cellInterface) {
         return orgBoard
     }
     try {
-        return solveSudoku(1, 1, {...orgBoard}, orgBoard )
+        for(let i = 0; i <= 8; i++){
+            try {
+                return solveSudoku(1, 1, {...orgBoard}, orgBoard, i, 'row')
+            } catch {}
+            try {
+                return solveSudoku(1, 1, {...orgBoard}, orgBoard, i, 'col')
+            } catch (error) {}
+        }
+        return orgBoard
     } catch (error) {
         console.log('Possible invalid board')
         return orgBoard
+
     }
 
 }
 
-function solveSudoku(row: number, col: number, board: cellInterface, orgBoard:cellInterface): cellInterface {
+function solveSudoku(row: number, col: number, board: cellInterface, orgBoard:cellInterface, startCell: number, direction: 'col' | 'row'): cellInterface {
     
     if(row === 10) return board
     if(row === 0) return orgBoard
 
-    let cellAdress = row + '_' + col
+    let newRow = row + startCell <= 9 ? row + startCell : row - (9 - startCell)
+    let newCol = col + startCell <= 9 ? col + startCell : col - (9 - startCell)
+
+    // let cellAdress = newRow + '_' + newCol
+    let cellAdress = direction === 'row' ? newRow + '_' + newCol :  newCol + '_' + newRow
 
     if(orgBoard[cellAdress] !== '') {
         row = col < 9 ? row : row + 1
         col = col < 9 ? col + 1 : 1
-        return solveSudoku(row, col, board, orgBoard)
+        return solveSudoku(row, col, board, orgBoard, startCell, direction)
     }
 
     let success = setCellValue(cellAdress, board[cellAdress] ,board)
@@ -34,23 +47,24 @@ function solveSudoku(row: number, col: number, board: cellInterface, orgBoard:ce
     if(success) {
         row = col < 9 ? row : row + 1
         col = col < 9 ? col + 1 : 1
-        return solveSudoku(row, col, board, orgBoard)
+        return solveSudoku(row, col, board, orgBoard, startCell, direction)
     } else {
         board[cellAdress] = ''
+        
         do {
             row = col > 1 ? row : row - 1
             col = col > 1 ? col - 1 : 9
+            let newRow = row + startCell <= 9 ? row + startCell : row - (9 - startCell)
+            let newCol = col + startCell <= 9 ? col + startCell : col - (9 - startCell)
+        
+            cellAdress = direction === 'row' ? newRow + '_' + newCol :  newCol + '_' + newRow
             if(row <= 0) return orgBoard
-        } while(orgBoard[row + '_' + col])
+        } while(orgBoard[cellAdress])
 
-        return solveSudoku(row, col, board, orgBoard)
+        return solveSudoku(row, col, board, orgBoard, startCell, direction)
     }
 
 }
-
-
-
-
 
 
 function validate(cellAdress: string, val: string, board:cellInterface) {

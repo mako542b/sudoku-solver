@@ -3,16 +3,17 @@
 @tailwind utilities;
 
 .cell {
-  @apply aspect-square bg-white border-gray-900;
-  width: clamp(15px, 6vw, 50px);
+  @apply aspect-square bg-white border-gray-900 w-cellWidthSm md:w-cellWidth;
+
 }
 
 input {
   width:100%;
   height:100%;
-  font-size: clamp(10px, 5vw, 40px);
+  font-size: clamp(16px, 6vw, 38px);
+  display: block;
 }
 
 .button {
-  @apply rounded-md py-3 bg-green-100 hover:bg-green-200 font-semibold uppercase;
+  @apply rounded-md py-1 md:py-3 bg-green-100 hover:bg-green-200 font-semibold uppercase px-5;
 }

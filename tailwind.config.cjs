@@ -20,8 +20,12 @@ module.exports = {
         ],
       },
       gridTemplateColumns: {
-        'mainGrid': '1fr 150px'
-      }   
+        'mainGrid': '1fr 150px',
+      },
+      width: {
+        cellWidth: 'clamp(15px, 7.5vw, 50px)',
+        cellWidthSm: 'clamp(15px, 9vw, 40px)' 
+      }
     },
   },
   plugins: [

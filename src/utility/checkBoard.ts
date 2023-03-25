@@ -1,14 +1,13 @@
 import { cellInterface } from "./makeCells";
 
 
-export default function validateBoard(board:cellInterface, setcollidingCells: React.Dispatch<React.SetStateAction<string[]>>) {
+export default function validateBoard(board:cellInterface, setcollidingCells?: React.Dispatch<React.SetStateAction<string[]>>) {
 
     const collisions : string[] = []
     for(let [key, value] of Object.entries(board)){
         if(!validate(key, value, board)) collisions.push(key)
-        console.log(key)
     }
-    setcollidingCells(collisions)
+    setcollidingCells?.(collisions)
     return collisions.length === 0
 
 }

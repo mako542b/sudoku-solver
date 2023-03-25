@@ -25,7 +25,7 @@ export default async function startSolveBySteps(
     // 
 
     function delay(ms: number) {
-        return new Promise(resolve => setTimeout(() => resolve(null), delayDuration?.current || 100))
+        return new Promise(resolve => setTimeout(() => resolve(null), 801 - delayDuration?.current || 100))
     }
 
     async function solveBySteps(
@@ -37,7 +37,7 @@ export default async function startSolveBySteps(
 
         
         if(row === 10) return true
-        if(row === 0) return false
+        if(row === 0) return true
         
         let cellAdress = row + '_' + col
         calculatingCellSetter(cellAdress)
@@ -66,7 +66,7 @@ export default async function startSolveBySteps(
                 row = col > 1 ? row : row - 1
                 col = col > 1 ? col - 1 : 9
                 calculatingCellSetter(row + '_' + col)
-                if(row <= 0) return false
+                if(row <= 0) return true
             } while(orgBoard[row + '_' + col])
 
             return solveBySteps(row, col, board, orgBoard)
