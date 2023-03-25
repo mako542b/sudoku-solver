@@ -97,7 +97,7 @@ export default function() {
                 {phase === 'started' && <button onClick={handleAbord} className="button">Pause</button>}
                 {phase === 'stopped' && <button onClick={resumeExec} className="button">Resume</button>}
                 {phase !== 'started' && <button onClick={reset} className="button">Reset</button>}
-                {phase === 'started' && (<div className="grid">
+                {phase === 'started' && (<div className="grid md:w-40">
                     <input id="delay" type='range' min={10} max={800} defaultValue={400} onChange={(e) => delay.current = +e.target.value} className="h-6" />
                     <div className="flex justify-between">
                         <label htmlFor="delay">slower</label>
